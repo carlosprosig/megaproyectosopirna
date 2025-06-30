@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Dashboard de Megaproyectos</title>
+  <title>Megaproyecto y problemáticas socioambientales</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
@@ -50,7 +50,7 @@
     let proyectoLayer;
     let proyectos = [];
 
-    fetch('https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/proyectos.geojson')
+    fetch('https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/megaproyectos2.geojson')
       .then(res => res.json())
       .then(data => {
         proyectos = data.features;

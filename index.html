@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Megaproyecto y problemáticas socioambientales</title>
+  <title>Dashboard de Megaproyectos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
@@ -50,12 +50,11 @@
     let proyectoLayer;
     let proyectos = [];
 
-fetch('https://raw.githubusercontent.com/carlosprosig/megaproyectosopirna/main/megaproyectos2.geojson')
+    fetch('https://raw.githubusercontent.com/carlosprosig/megaproyectosopirna/main/megaproyectos2.geojson')
       .then(res => res.json())
       .then(data => {
         proyectos = data.features;
 
-        // Llenar selects
         const nombres = new Set();
         const tipos = new Set();
         const estados = new Set();
@@ -102,8 +101,7 @@ fetch('https://raw.githubusercontent.com/carlosprosig/megaproyectosopirna/main/m
             Estado: ${p.Estado}<br>
             Municipio: ${p.Municipio}<br>
             Consulta Indígena: ${p.Consulta_Indigena}<br>
-            Impacto Ambiental: ${p.Impacto_Ambiental}<br>
-            Fuente: <a href="${p.Fuente}" target="_blank">Ver fuente</a>
+            Fuente: <a href="${p.Información}" target="_blank">Ver fuente</a>
           `);
         }
       }).addTo(map);
@@ -127,7 +125,6 @@ fetch('https://raw.githubusercontent.com/carlosprosig/megaproyectosopirna/main/m
     document.getElementById('nombreSelect').addEventListener('change', filtrarProyectos);
     document.getElementById('tipoSelect').addEventListener('change', filtrarProyectos);
     document.getElementById('estadoSelect').addEventListener('change', filtrarProyectos);
-
   </script>
 </body>
 </html>

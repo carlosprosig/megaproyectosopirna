@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Dashboard de Megaproyectos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #controls {
+      margin: 10px;
+    }
+    #map {
+      height: 80vh;
+    }
+    select {
+      margin-right: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <select id="nombreSelect">
+      <option value="">--Nombre--</option>
+    </select>
+    <select id="tipoSelect">
+      <option value="">--Tipo--</option>
+    </select>
+    <select id="estadoSelect">
+      <option value="">--Estado--</option>
+    </select>
+  </div>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([23.5, -102], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const colorPorTipo = {
+      "Energía": "red",
+      "Infraestructura": "blue",
+      "Desarrollo turístico": "green",
+      "Otro": "orange"
+    };
+
+    let proyectoLayer;
+    let proyectos = [];
+
+    fetch('https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/proyectos.geojson')
+      .then(res => res.json())
+      .then(data => {
+        proyectos = data.features;
+
+        // Llenar selects
+        const nombres = new Set();
+        const tipos = new Set();
+        const estados = new Set();
+
+        proyectos.forEach(f => {
+          nombres.add(f.properties.Nombre);
+          tipos.add(f.properties.Tipo);
+          estados.add(f.properties.Estado);
+        });
+
+        nombres.forEach(n => addOption('nombreSelect', n));
+        tipos.forEach(t => addOption('tipoSelect', t));
+        estados.forEach(e => addOption('estadoSelect', e));
+
+        mostrarProyectos(proyectos);
+      });
+
+    function addOption(selectId, value) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+      document.getElementById(selectId).appendChild(option);
+    }
+
+    function mostrarProyectos(lista) {
+      if (proyectoLayer) proyectoLayer.remove();
+      proyectoLayer = L.geoJSON(lista, {
+        pointToLayer: function (feature, latlng) {
+          const tipo = feature.properties.Tipo;
+          return L.circleMarker(latlng, {
+            radius: 6,
+            fillColor: colorPorTipo[tipo] || 'gray',
+            color: '#000',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+          });
+        },
+        onEachFeature: function (feature, layer) {
+          const p = feature.properties;
+          layer.bindPopup(`
+            <b>${p.Nombre}</b><br>
+            Tipo: ${p.Tipo}<br>
+            Estado: ${p.Estado}<br>
+            Municipio: ${p.Municipio}<br>
+            Consulta Indígena: ${p.Consulta_Indigena}<br>
+            Impacto Ambiental: ${p.Impacto_Ambiental}<br>
+            Fuente: <a href="${p.Fuente}" target="_blank">Ver fuente</a>
+          `);
+        }
+      }).addTo(map);
+    }
+
+    function filtrarProyectos() {
+      const nombre = document.getElementById('nombreSelect').value;
+      const tipo = document.getElementById('tipoSelect').value;
+      const estado = document.getElementById('estadoSelect').value;
+
+      const filtrados = proyectos.filter(f => {
+        const p = f.properties;
+        return (!nombre || p.Nombre === nombre) &&
+               (!tipo || p.Tipo === tipo) &&
+               (!estado || p.Estado === estado);
+      });
+
+      mostrarProyectos(filtrados);
+    }
+
+    document.getElementById('nombreSelect').addEventListener('change', filtrarProyectos);
+    document.getElementById('tipoSelect').addEventListener('change', filtrarProyectos);
+    document.getElementById('estadoSelect').addEventListener('change', filtrarProyectos);
+
+  </script>
+</body>
+</html>

@@ -6,6 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    #header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
     #controls {
       margin: 10px;
     }
@@ -20,7 +32,7 @@
       border-radius: 5px;
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
       position: absolute;
-      bottom: 30px;
+      bottom: 90px;
       left: 10px;
       z-index: 1000;
     }
@@ -36,6 +48,16 @@
       border-radius: 3px;
       display: inline-block;
     }
+    #footer {
+      font-size: 12px;
+      background: #f4f4f4;
+      padding: 10px;
+      text-align: center;
+    }
+    #footer a {
+      color: #0066cc;
+      text-decoration: none;
+    }
     select {
       margin-right: 10px;
       padding: 5px;
@@ -43,6 +65,7 @@
   </style>
 </head>
 <body>
+  <div id="header">Megaproyectos y problemáticas socioambientales en México</div>
   <div id="controls">
     <select id="nombreSelect">
       <option value="">--Nombre--</option>
@@ -56,6 +79,10 @@
   </div>
   <div id="map"></div>
   <div id="legend"></div>
+  <div id="footer">
+    Centro de Investigaciones y Estudios Superiores en Antropología Social (CIESAS) - Programa Especial de Sistemas de Información Geográfica para Ciencias Sociales y Humanidades (ProSIG-CSH) - Observatorio de Pueblos Indígenas, Recursos Naturales y Medio Ambiente (OPIRNA)<br>
+    <a href="https://opirna.ciesas.edu.mx/" target="_blank">https://opirna.ciesas.edu.mx/</a>
+  </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
